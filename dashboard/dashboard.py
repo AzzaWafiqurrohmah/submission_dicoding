@@ -5,7 +5,7 @@ import streamlit as st
 
 def create_order_by_season_df(df):
     order_by_season_df = df.groupby('season_day').agg({
-        'count_day': ['mean']
+        'count_day': 'mean'
     })
     return order_by_season_df
 
@@ -48,15 +48,17 @@ with col1:
 with col2:
     total_cust = main_df.count_day.sum()
     st.metric("Total Pelanggan", value=total_cust)
- 
+    
+
 season_labels = ['Spring', 'Summer', 'Fall', 'Winter']
+colors = ['#77DD77', '#FFB347', '#FF6961', '#AEC6CF']
 
-fig, ax = plt.subplots(figsize=(9,5))
-order_by_season_df['count_day'].plot(kind='bar', ax=ax)
 
-ax.set_xticks(range(4))
-ax.set_xticklabels(season_labels, rotation=0)
-
+# Plot
+fig, ax = plt.subplots(figsize=(7, 5))
+bars = ax.bar(season_labels, order_by_season_df['count_day'].values, color=colors)
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+ax.bar_label(bars, fmt='%.0f', fontsize=10, fontweight='bold')
 st.pyplot(fig)
 
 
